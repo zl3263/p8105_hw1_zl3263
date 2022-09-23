@@ -1,0 +1,66 @@
+---
+title: "p8105_hw1_zl3263"
+output: github_document
+date: "2022-09-23"
+---
+
+## Problem 1
+
+**Import library and dataset:**
+
+```{r}
+library(tidyverse)
+data("penguins", package = "palmerpenguins")
+```
+
+The variable names are as follow: `r colnames(penguins)`
+
+It contains `r nrow(penguins)` rows and `r ncol(penguins)` columns.
+
+The mean flipper length is `r mean(penguins$flipper_length_mm,na.rm = T)` with NA value in this column been directly removed.
+
+**Create scatter plot:**
+
+The NA in each row is removed through `drop_na` , the resulted fig is saved as png file.
+
+```{r}
+penguinsFiltered = drop_na(penguins)
+ggplot(data = penguinsFiltered, 
+       aes(x = bill_length_mm, y = flipper_length_mm, color = species)) + geom_point()
+
+ggsave("Bill_FlipperLength.png")
+```
+
+## Problem 2
+
+**Create data frame using tibble:**
+
+```{r}
+df = tibble(
+  randNorm = rnorm(10),
+  isPos = randNorm > 0,
+  strSeq = c('a1','a2','a3','a4','a5','a6','a7','a8','a9','a10'),
+  varFactor = factor(c('a','a','b','b','c','c','c','c','c','c'))
+  
+)
+df
+```
+
+**Make mean of each variable:**
+
+```{r, warning=FALSE}
+mean(pull(df,randNorm))
+mean(pull(df,isPos))
+mean(pull(df,strSeq))
+mean(pull(df,varFactor))
+```
+
+Mean works on the Numeric and Logic type but cannot work on Character and Factor.
+
+```{r, eval = FALSE}
+as.numeric(df$isPos)
+as.numeric(df$strSeq)
+as.numeric(df$varFactor)
+```
+
+`as.numeric` turned logic variableto 0 and 1. It turned factor to ordered number series and character to NA. It helps to explain the mean of logic variable.
